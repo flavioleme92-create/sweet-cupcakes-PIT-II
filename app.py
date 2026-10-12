@@ -11,7 +11,7 @@ BASE = Path(__file__).resolve().parent
 app = Flask(__name__)
 app.config.update(SECRET_KEY=os.environ.get('SECRET_KEY', 'dev-altere-esta-chave'), DATABASE=os.environ.get('DATABASE', str(BASE/'cupcakes.db')), SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Lax')
 
-PRODUCTS = [(1,'Chocolate Belga','Cupcake com ganache cremosa de chocolate belga',12.90,'🍫'),(2,'Red Velvet','Massa aveludada e cobertura de cream cheese',14.50,'❤️'),(3,'Baunilha & Morango','Baunilha, recheio de morango e chantilly',13.90,'🍓'),(4,'Doce de Leite','Cupcake com doce de leite e confeitos',13.50,'🧁'),(5,'Limão Siciliano','Massa cítrica e cobertura delicada',13.90,'🍋'),(6,'Cookies & Cream','Chocolate com cobertura de biscoito',15.00,'🍪')]
+PRODUCTS = [(1,'Chocolate Belga','Cupcake com ganache cremosa de chocolate belga',12.90,'🍫'),(2,'Red Velvet','Massa aveludada e cobertura de cream cheese',14.50,'❤️'),(3,'Baunilha & Morango','Baunilha, recheio de morango e chantilly',13.90,'🍓'),(4,'Doce de Leite','Cupcake com doce de leite e confeitos',13.50,'🧁'),(5,'Limão Siciliano','Massa cítrica e cobertura delicada',13.90,'🍋'),(6,'Cookies & Cream','Chocolate com cobertura de biscoito',15.00,'🍪'),(7,'Coco Cremoso','Massa macia de coco com cobertura cremosa e coco ralado',13.90,'🥥'),(8,'Churros','Massa com canela e cobertura de doce de leite',14.90,'✨')]
 
 def db():
     if 'db' not in g:
@@ -58,7 +58,7 @@ def register():
         if len(name)<2 or '@' not in email or len(password)<8: flash('Informe nome, e-mail válido e senha com ao menos 8 caracteres.','error')
         else:
             try:
-                cursor=db().execute('INSERT INTO users(name,email,password_hash) VALUES(?,?,?)',(name,email,generate_password_hash(password)));db().commit();session.clear();session['user_id']=cursor.lastrowid;flash('Cadastro realizado com sucesso!','success');return redirect(url_for('index'))
+                cursor=db().execute('INSERT INTO users(name,email,password_hash) VALUES(?,?,?)',(name,email,generate_password_hash(password)));db().commit();cart=session.get('cart',{}).copy();session.clear();session['user_id']=cursor.lastrowid;session['cart']=cart;flash('Cadastro realizado com sucesso!','success');return redirect(url_for('index'))
             except sqlite3.IntegrityError: flash('Este e-mail já está cadastrado.','error')
     return render_template('auth.html',title='Criar conta',register=True)
 
@@ -123,7 +123,12 @@ def checkout():
 @app.route('/pedidos')
 @login_required
 def orders():
-    data=db().execute('SELECT * FROM orders WHERE user_id=? ORDER BY id DESC',(session['user_id'],)).fetchall();return render_template('orders.html',orders=data)
+    data=db().execute('SELECT * FROM orders WHERE user_id=? ORDER BY id DESC',(session['user_id'],)).fetchall();
+    orders_with_items=[]
+    for order in data:
+        items=db().execute('''SELECT p.name, p.emoji, oi.quantity, oi.unit_price_cents, p.id AS product_id FROM order_items oi JOIN products p ON p.id=oi.product_id WHERE oi.order_id=? ORDER BY oi.id''',(order['id'],)).fetchall()
+        orders_with_items.append({'order':order,'items':items})
+    return render_template('orders.html',orders=orders_with_items)
 
 @app.template_filter('brl')
 def brl(cents):return f'R$ {cents/100:,.2f}'.replace(',','X').replace('.',',').replace('X','.')

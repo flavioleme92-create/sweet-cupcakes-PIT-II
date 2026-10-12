@@ -1,10 +1,21 @@
-{% extends 'base.html' %}
-{% block content %}
-<section class="hero-photo" aria-label="Sweet Cupcakes, cupcakes gourmet artesanais do Flávio">
-  <img src="{{ url_for('static',filename='img/banner-cupcake.jpg') }}" alt="Sweet Cupcakes: cupcakes gourmet artesanais do Flávio, com cupcakes de chocolate, morango e red velvet">
-</section>
+{% extends 'base.html' %}{% block content %}
+<section class="hero-photo" aria-label="Sweet Cupcakes, cupcakes gourmet artesanais do Flávio"><img src="{{ url_for('static',filename='img/banner-cupcake.jpg') }}" alt="Sweet Cupcakes: cupcakes gourmet artesanais do Flávio"></section>
 <div class="hero-action"><a class="primary" href="#cardapio">Explorar cardápio ↓</a></div>
 <section id="cardapio"><div class="section-head"><h2>Nosso cardápio</h2><p>Sabores artesanais preparados com carinho</p></div>
-{% set product_images = {1:'chocolate.jpg',2:'redvelvet.jpg',3:'morango.jpg',4:'docedeleite.jpg',5:'limao.jpg',6:'cookies.jpg'} %}
-<div class="products">{% for p in products %}<article class="product"><div class="product-image"><img src="{{ url_for('static',filename='img/' ~ product_images.get(p['id'],'chocolate.jpg')) }}" alt="Foto do cupcake {{ p['name'] }}" loading="lazy"></div><div class="product-body"><h3>{{ p['name'] }}</h3><p>{{ p['description'] }}</p><div class="buy"><strong>{{ p['price_cents']|brl }}</strong><form method="post" action="{{ url_for('add_cart',product_id=p['id']) }}"><label class="sr" for="q{{ p['id'] }}">Quantidade</label><input id="q{{ p['id'] }}" type="number" name="quantity" min="1" max="30" value="1"><button type="submit">Adicionar</button></form></div></div></article>{% endfor %}</div></section>
-{% endblock %}
+{% set product_images = {1:'chocolate.jpg',2:'redvelvet.jpg',3:'morango.jpg',4:'docedeleite.jpg',5:'limao.jpg',6:'cookies.jpg',7:'coco.jpg',8:'churros.jpg'} %}
+{% set ingredients = {
+1:'Farinha de trigo, ovos, açúcar, leite, cacau, chocolate e creme de leite.',
+2:'Farinha de trigo, ovos, açúcar, cacau, corante alimentício vermelho, cream cheese e leite.',
+3:'Farinha de trigo, ovos, açúcar, leite, baunilha, morango e creme vegetal para chantilly.',
+4:'Farinha de trigo, ovos, açúcar, leite, doce de leite e confeitos.',
+5:'Farinha de trigo, ovos, açúcar, leite, limão siciliano e creme de cobertura.',
+6:'Farinha de trigo, ovos, açúcar, leite, chocolate, creme e biscoito de chocolate.',
+7:'Farinha de trigo, ovos, açúcar, leite, coco ralado e creme de coco.',
+8:'Farinha de trigo, ovos, açúcar, leite, canela, doce de leite e açúcar.'} %}
+<p class="ingredient-note">Ingredientes ilustrativos para o protótipo acadêmico. Consulte a loja sobre alergênicos e composição antes do consumo.</p>
+<div class="products">{% for p in products %}
+<article class="product"><div class="product-image"><img src="{{ url_for('static',filename='img/' ~ product_images[p['id']]) }}" alt="Cupcake sabor {{ p['name'] }}" loading="lazy"></div>
+<div class="product-body"><h3>{{ p['name'] }}</h3><p>{{ p['description'] }}</p>
+<details class="product-details"><summary>Ver mais • ingredientes</summary><p>{{ ingredients[p['id']] }}</p><p class="hint">Atenção: pode conter glúten, leite e ovos. Informações ilustrativas.</p></details>
+<div class="buy"><strong>{{ p['price_cents']|brl }}</strong><form method="post" action="{{ url_for('add_cart',product_id=p['id']) }}"><label class="sr" for="q{{ p['id'] }}">Quantidade</label><input id="q{{ p['id'] }}" type="number" name="quantity" min="1" max="30" value="1"><button type="submit">Adicionar</button></form></div></div></article>
+{% endfor %}</div></section>{% endblock %}

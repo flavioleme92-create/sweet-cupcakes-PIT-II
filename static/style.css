@@ -79,3 +79,18 @@ footer { text-align: center; background: #fff; padding: 1.8rem 20px; color: #745
 @media (max-width: 820px) { .products { grid-template-columns: repeat(2, minmax(0, 1fr)); } .top { padding-inline: 20px; } main { width: calc(100% - 40px); } }
 @media (max-width: 590px) { .top { flex-direction: column; align-items: flex-start; gap: .65rem; } nav { gap: .8rem; } main { width: calc(100% - 28px); } .hero-photo { margin: 1rem 0 .85rem; border-radius: 15px; } .hero-action { margin-bottom: 2.2rem; } .products { grid-template-columns: 1fr; } .product-image { aspect-ratio: 1.5 / 1; } .panel { padding: 1.3rem; } .buy { flex-wrap: wrap; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+
+/* Melhorias solicitadas pelos cinco avaliadores */
+.cart-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;margin-top:1.2rem}
+.secondary-action{display:inline-block;padding:.72rem 1.1rem;border:1px solid #bf607c;border-radius:10px;color:#a52b56;background:#fff;text-decoration:none;font-weight:750}
+.secondary-action:hover{background:#fff0f4}
+.product-details{border-top:1px solid #f3dadd;padding:.65rem 0;margin:.3rem 0 .8rem}
+.product-details summary{font-weight:750;color:#a52b56;cursor:pointer}
+.product-details p{min-height:0;margin:.45rem 0;font-size:.91rem}
+.ingredient-note{font-size:.85rem;color:#705c63;text-align:center;margin:-.5rem 0 1.4rem}
+.order-celebration{display:flex;align-items:center;gap:1rem;padding:1rem;border-radius:15px;background:linear-gradient(115deg,#ffe6ed,#fff4e8)}
+.order-celebration>span{font-size:2.1rem}.order-celebration h2{margin:0;font-size:1.4rem}.order-celebration p{margin:.2rem 0}
+.ordered-products{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+.ordered-product{display:flex;align-items:center;gap:.55rem;background:#fff7f6;border:1px solid #f3dadd;border-radius:12px;padding:.5rem}
+.ordered-product img{width:72px;height:72px;object-fit:cover;border-radius:9px}
+@media(max-width:590px){.order-celebration{align-items:flex-start}.ordered-products{flex-direction:column}}

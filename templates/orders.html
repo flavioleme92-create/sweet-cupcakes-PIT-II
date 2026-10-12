@@ -1,1 +1,9 @@
-{% extends 'base.html' %}{% block content %}<section class="panel"><h1>Meus pedidos</h1>{% if orders %}{% for o in orders %}<article class="order"><h3>Pedido #{{ o['id'] }} — {{ o['status'] }}</h3><p>{{ o['created_at'] }} • {{ o['total_cents']|brl }}</p><p>Entrega: {{ o['delivery_address'] }}</p><p>Pagamento: {{ o['payment_method'] }}</p></article>{% endfor %}{% else %}<p>Você ainda não realizou pedidos.</p>{% endif %}</section>{% endblock %}
+{% extends 'base.html' %}{% block content %}
+<section class="panel"><h1>Meus pedidos</h1>
+{% if orders %}{% for entry in orders %}{% set o=entry.order %}
+<article class="order"><div class="order-celebration"><span aria-hidden="true">🎉 🧁</span><div><h2>Pedido #{{ o['id'] }} recebido!</h2><p>Que alegria! Seus cupcakes foram selecionados com carinho.</p></div></div>
+<p><strong>{{ o['created_at'] }} • {{ o['total_cents']|brl }}</strong></p>
+<div class="ordered-products">{% for item in entry['items'] %}<div class="ordered-product"><img src="{{ url_for('static',filename='img/' ~ ({1:'chocolate.jpg',2:'redvelvet.jpg',3:'morango.jpg',4:'docedeleite.jpg',5:'limao.jpg',6:'cookies.jpg',7:'coco.jpg',8:'churros.jpg'}[item['product_id']])) }}" alt="Cupcake {{ item['name'] }}"><span>{{ item['quantity'] }} × {{ item['name'] }}</span></div>{% endfor %}</div>
+<p>Status: {{ o['status'] }} • Pagamento: {{ o['payment_method'] }}</p><p>Entrega: {{ o['delivery_address'] }}</p></article>
+{% endfor %}{% else %}<p>Você ainda não realizou pedidos.</p>{% endif %}
+<a class="secondary-action" href="{{ url_for('index') }}#cardapio">← Voltar ao cardápio</a></section>{% endblock %}
