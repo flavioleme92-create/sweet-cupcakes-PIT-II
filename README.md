@@ -1,4 +1,4 @@
-# Doce Encanto — Projeto Integrador II
+# Sweet Cupcakes — Projeto Integrador II
 
 Continuação do **Sistema Mobile para Loja Virtual de Cupcakes Gourmet**, da disciplina Projeto Integrador Transdisciplinar em Engenharia de Software I. Protótipo funcional em **web responsiva** com Flask, SQLite e templates HTML/CSS.
 
